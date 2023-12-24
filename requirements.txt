@@ -1,0 +1,7 @@
+langchain
+gpt4all 
+chromadb 
+langchainhub
+pypdf
+termcolor
+sentence-transformers
