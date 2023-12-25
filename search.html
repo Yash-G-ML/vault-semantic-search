@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vault Semantic Search</title>
+    <!-- Use Bootswatch Cyborg theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/solar/bootstrap.min.css" integrity="sha384-NCwXci5f5ZqlDw+m7FwZSAwboa0svoPPylIW3Nf+GBDsyVum+yArYnaFLE9UDzLd" crossorigin="anonymous">
+    <!-- Bootstrap CSS (for additional styling) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/solar/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #inputForm {
+            margin-bottom: 20px;
+            background-color: #343a40; /* Dark background color */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #outputList {
+            list-style-type: none;
+            padding: 0;
+            background-color: #343a40; /* Dark background color */
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .error {
+            color: red;
+        }
+
+        h1 {
+            color: #17a2b8; /* Accent color */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="mt-4">Vault Semantic Search</h1>
+
+        <form id="inputForm">
+            <div class="form-group">
+                <label for="inputText">Enter Text:</label>
+                <input type="text" class="form-control" id="inputText" required>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="fetchData()">Submit</button>
+        </form>
+
+        <ul id="outputList" class="list-group"></ul>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        function fetchData() {
+            const inputText = document.getElementById('inputText').value;
+
+            // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint
+            const apiUrl = 'http://127.0.0.1:5000/query';
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any other headers required by your API
+                },
+                body: JSON.stringify({ input: inputText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                displayError('An error occurred while fetching data.');
+            });
+        }
+
+        function displayResults(results) {
+            const outputList = document.getElementById('outputList');
+            outputList.innerHTML = '';
+
+            results.forEach(text => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item');
+                listItem.textContent = text;
+                outputList.appendChild(listItem);
+            });
+        }
+
+        function displayError(message) {
+            const outputList = document.getElementById('outputList');
+            outputList.innerHTML = '';
+
+            const errorItem = document.createElement('li');
+            errorItem.classList.add('list-group-item', 'error');
+            errorItem.textContent = message;
+            outputList.appendChild(errorItem);
+        }
+    </script>
+
+</body>
+</html>
